@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Device Request</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
+    <style>
+        header {
+            background-color: #f8f9fa;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        header img {
+            max-width: 80px;
+            height: auto;
+            margin-left: 20px;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        nav a {
+            color: #333;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        nav a:hover {
+            background-color: #007bff;
+            color: white !important;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+        }
+
+        .hamburger-menu {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                display: none;
+            }
+            .hamburger-menu {
+                display: block;
+            }
+        }
+
+        .hero-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{{ url_for("static", filename="ekgh.jpg") }}');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 100px 20px;
+            text-align: center;
+        }
+
+        .hero-section h1 {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-section p {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-section .btn {
+            font-size: 1.2rem;
+            padding: 10px 30px;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        footer {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{{ url_for("static", filename="ekgh.jpg") }}');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .overlay-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .overlay-content table {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .overlay-content th, .overlay-content td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .overlay-content th {
+            background-color: #f8f9fa;
+        }
+
+        .overlay-buttons {
+            text-align: right;
+        }
+
+        .overlay-buttons button {
+            margin-left: 10px;
+        }
+
+        .select2-container--default .select2-selection--single {
+            height: 38px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 36px;
+        }
+        .select2-dropdown {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Hospital Logo">
+        <nav>
+            <a href="{{ url_for('index') }}">
+                <i class="fas fa-home"></i>
+                Home
+            </a>
+            <a href="{{ url_for('glossary') }}" class="active">
+                <i class="fas fa-book"></i>
+                Glossary
+            </a>
+            <a href="/admin/login">
+                <i class="fas fa-lock"></i>
+                Admin
+            </a>
+        </nav>
+        <div class="hamburger-menu">
+            <i class="fas fa-bars"></i>
+        </div>
+    </header>
+
+    <div class="hero-section">
+        <h1>Eka Kotebe General Hospital</h1>
+        <p>Biomedical Department Medical Device Need Assessment Collection Form.</p>
+        <a href="#requestForm" class="btn btn-primary btn-lg">Request Medical Devices</a>
+    </div>
+
+    <div class="container mt-5">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form action="/submit" method="POST" id="requestForm">
+            <div class="mb-4 p-3 border rounded bg-light">
+                <h4 class="mb-3">User Information</h4>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label"><i class="fas fa-user"></i> Your Name</label>
+                        <input type="text" class="form-control" name="user_name" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label"><i class="fas fa-building"></i> Department</label>
+                        <select class="form-select" name="department" required>
+                            <option value="">Select department</option>
+                            <option value="Cardiology">Cardiology</option>
+                            <option value="Pediatrics">Pediatrics</option>
+                            <option value="Emergency">Emergency</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-4 p-3 border rounded bg-light">
+                <h4 class="mb-3">Medical Devices</h4>
+                <table class="table table-hover table-bordered" id="device-table">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Medical Device</th>
+                            <th>Measurement</th>
+                            <th>Quantity</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="editable-row">
+                            <td>
+                                <select class="form-select device-name" name="device_name[]">
+                                    <option value="">Select device</option>
+                                    {% for device in medical_devices %}
+                                    <option value="{{ device }}">{{ device }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-select quantity-measurement" name="quantity_measurement[]">
+                                    <option value="Item" selected>Item</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="number" class="form-control quantity" name="quantity[]">
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-success btn-sm add-row" disabled>
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <button type="button" class="btn btn-primary" onclick="showOverlay()" disabled id="submitButton">
+                <i class="fas fa-paper-plane"></i> Submit
+            </button>
+        </form>
+    </div>
+
+    <div class="overlay" id="overlay">
+        <div class="overlay-content">
+            <h3>Review Your Submission</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Device Name</th>
+                        <th>Measurement</th>
+                        <th>Quantity</th>
+                    </tr>
+                </thead>
+                <tbody id="overlayTableBody"></tbody>
+            </table>
+            <div class="overlay-buttons">
+                <button type="button" class="btn btn-secondary" onclick="closeOverlay()">Close</button>
+                <button type="button" class="btn btn-primary" onclick="submitForm()">Confirm and Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 Tadele Wondimu Ferede. All rights reserved.</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Initialize Select2
+            $('.device-name').select2({
+                placeholder: "Search for a device...",
+                allowClear: true,
+                width: '100%'
+            });
+
+            function checkRowValidity(row) {
+                const userValid = $('input[name="user_name"]').val().trim() !== '';
+                const departmentValid = $('select[name="department"]').val() !== '';
+                const deviceValid = row.find('.device-name').val() !== '';
+                const quantityValid = row.find('.quantity').val().trim() !== '';
+                
+                return userValid && departmentValid && deviceValid && quantityValid;
+            }
+
+            function updateButtons() {
+                $('.editable-row').each(function() {
+                    const row = $(this);
+                    const isValid = checkRowValidity(row);
+                    row.find('.add-row').prop('disabled', !isValid);
+                });
+
+                const anyValidRow = $('.editable-row').toArray().some(row => 
+                    checkRowValidity($(row))
+                );
+                $('#submitButton').prop('disabled', !anyValidRow);
+            }
+
+            $(document).on('input change', 'input, select', function() {
+                updateButtons();
+            });
+
+            $(document).on('click', '.add-row', function() {
+                const newRow = $(this).closest('tr').clone();
+                
+                // Clear inputs and reset Select2
+                newRow.find('.quantity').val(''); // Clear quantity input
+                
+                // Destroy existing Select2 instance and clear its value
+                newRow.find('.device-name').select2('destroy');
+                newRow.find('.device-name').val(''); // Reset value to empty
+                
+                // Clear any selected options
+                newRow.find('.device-name option:selected').prop('selected', false);
+                newRow.find('.device-name option:first').prop('selected', true); // Set first option as selected
+                
+                newRow.find('.add-row').prop('disabled', true); // Disable add button in new row
+                
+                // Append the new row
+                $('#device-table tbody').append(newRow);
+                
+                // Reinitialize Select2 on the new row
+                newRow.find('.device-name').select2({
+                    placeholder: "Search for a device...",
+                    allowClear: true,
+                    width: '100%'
+                });
+                
+                updateButtons(); // Update button states
+            });
+
+            updateButtons();
+        });
+
+        function showOverlay() {
+            const rows = [];
+            $('.editable-row').each(function() {
+                const device = $(this).find('.device-name').val();
+                const measurement = $(this).find('.quantity-measurement').val();
+                const quantity = $(this).find('.quantity').val();
+                
+                if (device && quantity) {
+                    rows.push({
+                        device,
+                        measurement,
+                        quantity
+                    });
+                }
+            });
+
+            const tbody = $('#overlayTableBody');
+            tbody.empty();
+            
+            rows.forEach(row => {
+                tbody.append(`
+                    <tr>
+                        <td>${row.device}</td>
+                        <td>${row.measurement}</td>
+                        <td>${row.quantity}</td>
+                    </tr>
+                `);
+            });
+
+            $('#overlay').show();
+        }
+
+        function closeOverlay() {
+            $('#overlay').hide();
+        }
+
+        async function submitForm() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            const logoUrl = "{{ url_for('static', filename='logo.png') }}";
+            const logoData = await fetch(logoUrl)
+                .then(response => response.blob())
+                .then(blob => new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result);
+                    reader.readAsDataURL(blob);
+                }));
+
+            doc.addImage(logoData, 'PNG', 15, 15, 30, 30);
+            doc.setFontSize(22);
+            doc.setFont("helvetica", "bold");
+            doc.setTextColor(0, 123, 255);
+            doc.text("Eka Kotebe General Hospital", 50, 30);
+            
+            doc.setFontSize(12);
+            doc.setTextColor(0);
+            doc.setFont("helvetica", "normal");
+            doc.text(`Submitted by: ${$('input[name="user_name"]').val()}`, 15, 50);
+            doc.text(`Department: ${$('select[name="department"]').val()}`, 15, 55);
+            doc.text(`Date: ${new Date().toLocaleDateString()}`, 15, 60);
+            
+            const tableData = [];
+            $('.editable-row').each(function() {
+                const device = $(this).find('.device-name').val();
+                const measurement = $(this).find('.quantity-measurement').val();
+                const quantity = $(this).find('.quantity').val();
+                
+                if (device && quantity) {
+                    tableData.push([device, measurement, quantity]);
+                }
+            });
+
+            doc.autoTable({
+                startY: 65,
+                head: [['Device', 'Measurement', 'Quantity']],
+                body: tableData,
+                theme: 'grid',
+                styles: { 
+                    fontSize: 10,
+                    cellPadding: 3
+                },
+                headStyles: {
+                    fillColor: [41, 128, 185],
+                    textColor: 255,
+                    fontStyle: 'bold'
+                }
+            });
+
+            doc.save('medical_request.pdf');
+            document.getElementById('requestForm').submit();
+        }
+    </script>
+</body>
+</html>

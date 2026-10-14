@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Equipment Glossary</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
+    <style>
+        /* Copy all index.html styles */
+        header {
+            background-color: #f8f9fa;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        header img {
+            max-width: 80px;
+            height: auto;
+            margin-left: 20px;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        nav a {
+            color: #333;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        nav a:hover {
+            background-color: #007bff;
+            color: white !important;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+        }
+
+        .hamburger-menu {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                display: none;
+            }
+            .hamburger-menu {
+                display: block;
+            }
+        }
+
+        .hero-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{{ url_for("static", filename="ekgh.jpg") }}');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 100px 20px;
+            text-align: center;
+        }
+
+        .hero-section h1 {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-section p {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        footer {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{{ url_for("static", filename="ekgh.jpg") }}');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        /* Glossary specific styles */
+        .department-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .department-title {
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .equipment-item {
+            margin-bottom: 15px;
+        }
+
+        dt {
+            font-weight: 600;
+            color: #333;
+        }
+
+        dd {
+            color: #666;
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Same header as index.html -->
+    <header>
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Hospital Logo">
+        <nav>
+            <a href="{{ url_for('index') }}">
+                <i class="fas fa-home"></i>
+                Home
+            </a>
+            <a href="{{ url_for('glossary') }}" class="active">
+                <i class="fas fa-book"></i>
+                Glossary
+            </a>
+            <a href="/admin/login">
+                <i class="fas fa-lock"></i>
+                Admin
+            </a>
+        </nav>
+        <div class="hamburger-menu">
+            <i class="fas fa-bars"></i>
+        </div>
+    </header>
+
+    <!-- Same hero section as index.html -->
+    <div class="hero-section">
+        <h1>Eka Kotebe General Hospital</h1>
+        <p>Medical Device Knowledge Base</p>
+    </div>
+
+    <!-- Glossary content -->
+    <div class="container mt-5">
+        <h1 class="text-center mb-4"></h1>
+
+        <!-- Emergency Category -->
+        <div class="department-section">
+            <h2 class="department-title">Emergency Category</h2>
+            <dl>
+                <div class="equipment-item">
+                    <dt>Defibrillator</dt>
+                    <dd>Delivers electric shocks to restore normal heart rhythm during cardiac emergencies</dd>
+                </div>
+                <div class="equipment-item">
+                    <dt>Crash Cart</dt>
+                    <dd>Mobile unit containing emergency medications and resuscitation equipment</dd>
+                </div>
+                <div class="equipment-item">
+                    <dt>Ventilator</dt>
+                    <dd>Provides mechanical breathing support for patients with respiratory failure</dd>
+                </div>
+                <div class="equipment-item">
+                    <dt>EKG/ECG Machine</dt>
+                    <dd>Records electrical activity of the heart to detect cardiac abnormalities</dd>
+                </div>
+                <div class="equipment-item">
+                    <dt>Infusion Pump</dt>
+                    <dd>Precisely delivers fluids, medications, or nutrients intravenously</dd>
+                </div>
+            </dl>
+        </div>
+
+        <!-- Imaging Category -->
+        <div class="department-section">
+            <h2 class="department-title">Imaging Category</h2>
+            <dl>
+                <div class="equipment-item">
+                    <dt>X-ray Machine</dt>
+                    <dd>Uses radiation to produce images of internal body structures</dd>
+                </div>
+                <div class="equipment-item">
+                    <dt>CT Scanner</dt>
+                    <dd>Combines X-ray images from different angles to create cross-sectional views</dd>
+                </div>
+                <div class="equipment-item">
+                    <dt>MRI Machine</dt>
+                    <dd>Uses magnetic fields and radio waves to create detailed organ images</dd>
+                </div>
+                <div class="equipment-item">
+                    <dt>Ultrasound Machine</dt>
+                    <dd>Uses sound waves to visualize internal organs and blood flow</dd>
+                </div>
+                <div class="equipment-item">
+                    <dt>PET Scan</dt>
+                    <dd>Nuclear imaging technique that shows metabolic processes in the body</dd>
+                </div>
+            </dl>
+        </div>
+
+        <!-- Surgical Instruments -->
+        <div class="department-section">
+            <h2 class="department-title">Surgical Instruments</h2>
+            <dl>
+                <div class="equipment-item">
+                    <dt>Electrosurgical Unit</dt>
+                    <dd>Uses high-frequency current for cutting tissue and controlling bleeding</dd>
+                </div>
+                <div class="equipment-item">
+                    <dt>Anesthesia Machine</dt>
+                    <dd>Delivers precise mix of medical gases and anesthetic agents</dd>
+                </div>
+                <div class="equipment-item">
+                    <dt>Surgical Laser</dt>
+                    <dd>Provides precise cutting and cauterization during operations</dd>
+                </div>
+                <div class="equipment-item">
+                    <dt>Endoscope</dt>
+                    <dd>Flexible tube with camera for internal examinations and surgeries</dd>
+                </div>
+            </dl>
+        </div>
+
+        <!-- Patient Monitoring -->
+        <div class="department-section">
+            <h2 class="department-title">Patient Monitoring</h2>
+            <dl>
+                <div class="equipment-item">
+                    <dt>Patient Monitor</dt>
+                    <dd>Tracks vital signs including heart rate, blood pressure, and oxygen levels</dd>
+                </div>
+                <div class="equipment-item">
+                    <dt>Pulse Oximeter</dt>
+                    <dd>Measures oxygen saturation in blood through light absorption</dd>
+                </div>
+                <div class="equipment-item">
+                    <dt>Fetal Monitor</dt>
+                    <dd>Tracks fetal heart rate and uterine contractions during childbirth</dd>
+                </div>
+                <div class="equipment-item">
+                    <dt>Telemetry System</dt>
+                    <dd>Wireless monitoring of cardiac patients' heart rhythms</dd>
+                </div>
+            </dl>
+        </div>
+
+        <!-- Laboratory Equipment -->
+        <div class="department-section">
+            <h2 class="department-title">Laboratory Equipment</h2>
+            <dl>
+                <div class="equipment-item">
+                    <dt>Centrifuge</dt>
+                    <dd>Separates blood components through high-speed rotation</dd>
+                </div>
+                <div class="equipment-item">
+                    <dt>Microscope</dt>
+                    <dd>Enables examination of microscopic specimens and cells</dd>
+                </div>
+                <div class="equipment-item">
+                    <dt>Blood Analyzer</dt>
+                    <dd>Automates complete blood count (CBC) and other blood tests</dd>
+                </div>
+                <div class="equipment-item">
+                    <dt>Autoclave</dt>
+                    <dd>Sterilizes equipment using high-pressure saturated steam</dd>
+                </div>
+            </dl>
+        </div>
+
+        <!-- Physical Therapy -->
+        <div class="department-section">
+            <h2 class="department-title">Physical Therapy</h2>
+            <dl>
+                <div class="equipment-item">
+                    <dt>TENS Unit</dt>
+                    <dd>Provides pain relief through electrical nerve stimulation</dd>
+                </div>
+                <div class="equipment-item">
+                    <dt>Continuous Passive Motion Machine</dt>
+                    <dd>Automatically moves joints post-surgery to prevent stiffness</dd>
+                </div>
+                <div class="equipment-item">
+                    <dt>Ultrasound Therapy Machine</dt>
+                    <dd>Uses sound waves for deep tissue treatment and pain relief</dd>
+                </div>
+                <div class="equipment-item">
+                    <dt>Hydrotherapy Pool</dt>
+                    <dd>Provides buoyancy-assisted exercise in warm water</dd>
+                </div>
+            </dl>
+        </div>
+
+    </div>
+
+    <!-- Same footer as index.html -->
+    <footer>
+        <p>&copy; 2025 Tadele Wondimu Ferede. All rights reserved.</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
